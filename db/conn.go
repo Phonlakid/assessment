@@ -16,10 +16,10 @@ func Connect() {
 		log.Fatal("Connect to database error", err)
 	}
 	Conn = db
-
+	CreateTable(Conn)
 }
 
-func CreateTable() {
+func CreateTable(Conn *sql.DB) {
 	createTb := `
 	CREATE TABLE IF NOT EXISTS expenses (
 		id SERIAL PRIMARY KEY,
