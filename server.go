@@ -6,6 +6,6 @@ import (
 
 func main() {
 	db.Connect()
-	db.CreateTable()
+
 	defer db.Conn.Close()
 }
