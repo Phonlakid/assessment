@@ -57,3 +57,20 @@ func GetUserHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, Err{Message: "can't scan user:" + err.Error()})
 	}
 }
+
+func UpdateUserHandler(c echo.Context) error {
+	u := User{}
+
+	err := c.Bind(&u)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, Err{Message: err.Error()})
+	}
+
+	row := db.Conn.QueryRow("UPDATE expenses SET title=$2 , amount=$3 , note=$4, tags=$5 WHERE id=$1 RETURNING id", c.Param("id"), u.Title, u.Amount, u.Note, pq.Array(u.Tags))
+	err = row.Scan(&u.ID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, Err{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, u)
+}

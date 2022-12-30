@@ -22,6 +22,7 @@ func main() {
 	e.Logger.SetLevel(log.INFO)
 	e.POST("/expenses", controller.CreateexpensesHandler)
 	e.GET("/expenses/:id", controller.GetUserHandler)
+	e.PUT("/expenses/:id", controller.UpdateUserHandler)
 	go func() {
 		if err := e.Start(":2565"); err != nil && err != http.ErrServerClosed { // Start server
 			e.Logger.Fatal("shutting down the server")
