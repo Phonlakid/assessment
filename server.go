@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	"github.com/Phonlakid/assessment/db"
 )
 
 func main() {
-	fmt.Println("Please use server.go for main file")
-	fmt.Println("start at port:", os.Getenv("PORT"))
+	db.Connect()
+	db.CreateTable()
+	defer db.Conn.Close()
 }
