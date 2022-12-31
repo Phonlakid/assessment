@@ -9,7 +9,7 @@ import (
 	"github.com/lib/pq"
 )
 
-type User struct {
+type Expenses struct {
 	ID     int      `json:"id"`
 	Title  string   `json:"title"`
 	Amount float64  `json:"amount"`
@@ -23,7 +23,7 @@ type Err struct {
 
 func CreateexpensesHandler(c echo.Context) error {
 
-	u := User{}
+	u := Expenses{}
 	err := c.Bind(&u)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, Err{Message: err.Error()})
@@ -46,7 +46,7 @@ func GetUserHandler(c echo.Context) error {
 	}
 
 	row := stmt.QueryRow(id)
-	u := User{}
+	u := Expenses{}
 	err = row.Scan(&u.ID, &u.Title, &u.Amount, &u.Note, (*pq.StringArray)(&u.Tags))
 	switch err {
 	case sql.ErrNoRows:
@@ -59,7 +59,7 @@ func GetUserHandler(c echo.Context) error {
 }
 
 func UpdateUserHandler(c echo.Context) error {
-	u := User{}
+	u := Expenses{}
 
 	err := c.Bind(&u)
 	if err != nil {
@@ -86,10 +86,10 @@ func GetUsersHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, Err{Message: "can't query all users:" + err.Error()})
 	}
 
-	users := []User{}
+	users := []Expenses{}
 
 	for rows.Next() {
-		u := User{}
+		u := Expenses{}
 		err := rows.Scan(&u.ID, &u.Title, &u.Amount, &u.Note, (*pq.StringArray)(&u.Tags))
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, Err{Message: "can't scan user:" + err.Error()})
