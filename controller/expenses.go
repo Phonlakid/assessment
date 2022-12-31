@@ -27,7 +27,7 @@ func CreateexpensesHandler(c echo.Context) error {
 	return c.JSON(http.StatusCreated, u)
 }
 
-func GetUserHandler(c echo.Context) error {
+func GetexpensesHandler(c echo.Context) error {
 	id := c.Param("id")
 	stmt, err := db.Conn.Prepare("SELECT * FROM expenses WHERE id = $1")
 	if err != nil {
@@ -47,7 +47,7 @@ func GetUserHandler(c echo.Context) error {
 	}
 }
 
-func UpdateUserHandler(c echo.Context) error {
+func UpdateexpenseHandler(c echo.Context) error {
 	u := m.Expenses{}
 
 	err := c.Bind(&u)
@@ -64,7 +64,7 @@ func UpdateUserHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, u)
 }
 
-func GetUsersHandler(c echo.Context) error {
+func GetexpenseHandler(c echo.Context) error {
 	stmt, err := db.Conn.Prepare("SELECT * FROM expenses")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, m.Err{Message: "can't prepare query all users statment:" + err.Error()})

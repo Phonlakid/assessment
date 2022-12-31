@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreate(t *testing.T) {
+func TestCreateexpenses(t *testing.T) {
 	body := bytes.NewBufferString(`{
 		"title": "strawberry smoothie",
 		"amount": 79,
@@ -34,7 +34,7 @@ func TestCreate(t *testing.T) {
 	assert.Equal(t, []string{"food", "beverage"}, e.Tags)
 }
 
-func TestGetExpensesByID(t *testing.T) {
+func TestGetexpenses(t *testing.T) {
 	c := seedExpenses(t)
 
 	var Exp m.Expenses
@@ -50,7 +50,7 @@ func TestGetExpensesByID(t *testing.T) {
 	assert.NotEmpty(t, Exp.Tags)
 }
 
-func TestUpdateCustomer(t *testing.T) {
+func TestUpdateexpenses(t *testing.T) {
 	id := seedExpenses(t).ID
 	e := m.Expenses{
 		ID:     id,

@@ -21,9 +21,9 @@ func main() {
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 	e.POST("/expenses", controller.CreateexpensesHandler)
-	e.GET("/expenses/:id", controller.GetUserHandler)
-	e.PUT("/expenses/:id", controller.UpdateUserHandler)
-	e.GET("/expenses", controller.GetUsersHandler)
+	e.GET("/expenses/:id", controller.GetexpensesHandler)
+	e.PUT("/expenses/:id", controller.UpdateexpenseHandler)
+	e.GET("/expenses", controller.GetexpenseHandler)
 
 	go func() {
 		if err := e.Start(":2565"); err != nil && err != http.ErrServerClosed { // Start server
