@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -11,7 +12,7 @@ var Conn *sql.DB
 
 func Connect() {
 
-	db, err := sql.Open("postgres", "postgres://qgbloyzo:4RO9-nIJ0XNX4CArZTUb6_WJAHq6CM5O@john.db.elephantsql.com/qgbloyzo")
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal("Connect to database error", err)
 	}

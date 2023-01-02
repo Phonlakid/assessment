@@ -26,7 +26,7 @@ func main() {
 	e.GET("/expenses", controller.GetUsersHandler)
 
 	go func() {
-		if err := e.Start(":2565"); err != nil && err != http.ErrServerClosed { // Start server
+		if err := e.Start(os.Getenv("PORT")); err != nil && err != http.ErrServerClosed { // Start server
 			e.Logger.Fatal("shutting down the server")
 		}
 	}()
