@@ -10,7 +10,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func CreateexpensesHandler(c echo.Context) error {
+func CreateExpensesHandler(c echo.Context) error {
 
 	u := m.Expenses{}
 	err := c.Bind(&u)
@@ -27,7 +27,7 @@ func CreateexpensesHandler(c echo.Context) error {
 	return c.JSON(http.StatusCreated, u)
 }
 
-func GetexpensesHandler(c echo.Context) error {
+func GetExpensesHandler(c echo.Context) error {
 	id := c.Param("id")
 	stmt, err := db.Conn.Prepare("SELECT * FROM expenses WHERE id = $1")
 	if err != nil {
@@ -47,7 +47,7 @@ func GetexpensesHandler(c echo.Context) error {
 	}
 }
 
-func UpdateexpenseHandler(c echo.Context) error {
+func UpdateExpenseHandler(c echo.Context) error {
 	u := m.Expenses{}
 
 	err := c.Bind(&u)
@@ -64,7 +64,7 @@ func UpdateexpenseHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, u)
 }
 
-func GetexpenseHandler(c echo.Context) error {
+func GetExpenseHandler(c echo.Context) error {
 	stmt, err := db.Conn.Prepare("SELECT * FROM expenses")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, m.Err{Message: "can't prepare query all users statment:" + err.Error()})

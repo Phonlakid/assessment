@@ -126,6 +126,5 @@ func (r *Response) Decode(v interface{}) error {
 	if r.err != nil {
 		return r.err
 	}
-
 	return json.NewDecoder(r.Body).Decode(v)
 }
