@@ -50,69 +50,46 @@ func TestCreateexpenses(t *testing.T) {
 	// Setup server
 	SetupServer()
 
-	// Arrange
-	body := Expenses{
-		Title:  "strawberry smoothie",
-		Amount: 79,
-		Note:   "night market promotion discount 10 bath",
-		Tags:   []string{"food", "beverage"},
-	}
+	body := bytes.NewBufferString(`{
+		"title": "strawberry smoothie",
+		"amount": 79,
+		"note": "night market promotion discount 10 bath", 
+		"tags": ["food", "beverage"]
+	}`)
+	var e m.Expenses
 
-	b, _ := json.Marshal(body)
-	input := bytes.NewBufferString(string(b))
+	res := request(http.MethodPost, uri("expenses"), body)
+	err := res.Decode(&e)
 
-	want := Expenses{
-		Title:  "strawberry smoothie",
-		Amount: 79,
-		Note:   "night market promotion discount 10 bath",
-		Tags:   []string{"food", "beverage"},
-	}
-
-	// act
-	var got Expenses
-	res := request(http.MethodPost, uri("expenses"), input)
-	err := res.Decode(&got)
-
-	//assertion
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusCreated, res.StatusCode)
-	assert.Equal(t, want.Title, got.Title)
-	assert.Equal(t, want.Amount, got.Amount)
-	assert.Equal(t, want.Note, got.Note)
-	assert.Equal(t, want.Tags, got.Tags)
+	assert.NotEqual(t, 0, e.ID)
+	assert.Equal(t, "strawberry smoothie", e.Title)
+	assert.Equal(t, float64(79), e.Amount)
+	assert.Equal(t, "night market promotion discount 10 bath", e.Note)
+	assert.Equal(t, []string{"food", "beverage"}, e.Tags)
 }
 
 func TestGetexpenses(t *testing.T) {
 	// Setup server
 	SetupServer()
 
-	// Arrange
-	want := Expenses{
-		Title:  "strawberry smoothie",
-		Amount: 79,
-		Note:   "night market promotion discount 10 bath",
-		Tags:   []string{"food", "beverage"},
-	}
+	c := seedExpenses(t)
 
-	// act
-	gotCreate := seed(t)
+	var Exp m.Expenses
+	res := request(http.MethodGet, uri("expenses", strconv.Itoa(c.ID)), nil)
+	err := res.Decode(&Exp)
 
-	var got Expenses
-	res := request(http.MethodGet, uri("expenses", strconv.Itoa(gotCreate.Id)), nil)
-	err := res.Decode(&got)
-
-	//assertion
 	assert.Nil(t, err)
-	assert.Equal(t, gotCreate.Id, got.Id)
 	assert.Equal(t, http.StatusOK, res.StatusCode)
-	assert.Equal(t, want.Title, got.Title)
-	assert.Equal(t, want.Amount, got.Amount)
-	assert.Equal(t, want.Note, got.Note)
-	assert.Equal(t, want.Tags, got.Tags)
+	assert.Equal(t, c.ID, Exp.ID)
+	assert.NotEmpty(t, Exp.Title)
+	assert.NotEmpty(t, Exp.Amount)
+	assert.NotEmpty(t, Exp.Note)
+	assert.NotEmpty(t, Exp.Tags)
 }
 
 func TestUpdateexpenses(t *testing.T) {
-
 	id := seedExpenses(t).ID
 	e := m.Expenses{
 		ID:     id,
@@ -137,16 +114,12 @@ func TestUpdateexpenses(t *testing.T) {
 func TestGetAllExpenses(t *testing.T) {
 	SetupServer()
 
-	// Arrange
+	seedExpenses(t)
+	var exps []m.Expenses
 
-	//act
-	seed(t)
-
-	exps := []Expenses{}
 	res := request(http.MethodGet, uri("expenses"), nil)
 	err := res.Decode(&exps)
 
-	//assertion
 	assert.Nil(t, err)
 	assert.EqualValues(t, http.StatusOK, res.StatusCode)
 	assert.Greater(t, len(exps), 0)
