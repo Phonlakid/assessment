@@ -2,7 +2,7 @@
 $env:DATABASE_URL='postgres://qgbloyzo:4RO9-nIJ0XNX4CArZTUb6_WJAHq6CM5O@john.db.elephantsql.com/qgbloyzo';  $env:PORT=':2565'; go run server.go
 
 # integration test
-go test -v --tags=integration ./...
+go test -v --tags=test ./...
 
 #Docker
     ## To run integration test
@@ -15,4 +15,4 @@ go test -v --tags=integration ./...
         $ docker build -t assessment:latest .
 
     ## run image
-        $ docker run --name assessment -p 2565:2565 -e PORT=2565 -e DATABASE_URL='<url>' assessment:latest
+        $ docker run --name assessment -p 2565:2565 -e PORT=2565 -e DATABASE_URL='postgres://qgbloyzo:4RO9-nIJ0XNX4CArZTUb6_WJAHq6CM5O@john.db.elephantsql.com/qgbloyzo' assessment:latest
