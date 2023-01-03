@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/Phonlakid/assessment/controller"
+	C "github.com/Phonlakid/assessment/controller"
 	"github.com/Phonlakid/assessment/db"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -20,13 +20,14 @@ func main() {
 
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
-	e.POST("/expenses", controller.CreateexpensesHandler)
-	e.GET("/expenses/:id", controller.GetUserHandler)
-	e.PUT("/expenses/:id", controller.UpdateUserHandler)
-	e.GET("/expenses", controller.GetUsersHandler)
-
+	e.POST("/expenses", C.CreateExpensesHandler)
+	e.GET("/expenses/:id", C.GetExpensesHandler)
+	e.PUT("/expenses/:id", C.UpdateExpenseHandler)
+	e.GET("/expenses", C.GetExpenseHandler)
+	//port := ":" + os.Getenv("PORT")
 	go func() {
 		if err := e.Start(os.Getenv("PORT")); err != nil && err != http.ErrServerClosed { // Start server
+
 			e.Logger.Fatal("shutting down the server")
 		}
 	}()

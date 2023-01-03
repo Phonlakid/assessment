@@ -9,23 +9,18 @@ import (
 	"strings"
 	"testing"
 
+	m "github.com/Phonlakid/assessment/model"
 	"github.com/stretchr/testify/assert"
 )
 
-//test require
-// story1: create expenses
-// story2: get expenses by id
-// story3: update expenses by id
-// story4: get all expenses
-
-func TestCreate(t *testing.T) {
+func TestCreateexpenses(t *testing.T) {
 	body := bytes.NewBufferString(`{
 		"title": "strawberry smoothie",
 		"amount": 79,
 		"note": "night market promotion discount 10 bath", 
 		"tags": ["food", "beverage"]
 	}`)
-	var e Expenses
+	var e m.Expenses
 
 	res := request(http.MethodPost, uri("expenses"), body)
 	err := res.Decode(&e)
@@ -39,34 +34,34 @@ func TestCreate(t *testing.T) {
 	assert.Equal(t, []string{"food", "beverage"}, e.Tags)
 }
 
-func TestGetExpensesByID(t *testing.T) {
+func TestGetexpenses(t *testing.T) {
 	c := seedExpenses(t)
 
-	var lastExp Expenses
+	var Exp m.Expenses
 	res := request(http.MethodGet, uri("expenses", strconv.Itoa(c.ID)), nil)
-	err := res.Decode(&lastExp)
+	err := res.Decode(&Exp)
 
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, res.StatusCode)
-	assert.Equal(t, c.ID, lastExp.ID)
-	assert.NotEmpty(t, lastExp.Title)
-	assert.NotEmpty(t, lastExp.Amount)
-	assert.NotEmpty(t, lastExp.Note)
-	assert.NotEmpty(t, lastExp.Tags)
+	assert.Equal(t, c.ID, Exp.ID)
+	assert.NotEmpty(t, Exp.Title)
+	assert.NotEmpty(t, Exp.Amount)
+	assert.NotEmpty(t, Exp.Note)
+	assert.NotEmpty(t, Exp.Tags)
 }
 
-func TestUpdateCustomer(t *testing.T) {
+func TestUpdateexpenses(t *testing.T) {
 	id := seedExpenses(t).ID
-	e := Expenses{
+	e := m.Expenses{
 		ID:     id,
-		Title:  "PS5",
-		Amount: 13999,
-		Note:   "god of war only",
+		Title:  "Gundam",
+		Amount: 1,
+		Note:   "Gundam Freedom",
 		Tags:   []string{"gadget", "shopping"},
 	}
 	payload, _ := json.Marshal(e)
 	res := request(http.MethodPut, uri("expenses", strconv.Itoa(id)), bytes.NewBuffer(payload))
-	var info Expenses
+	var info m.Expenses
 	err := res.Decode(&info)
 
 	assert.Nil(t, err)
@@ -79,7 +74,7 @@ func TestUpdateCustomer(t *testing.T) {
 
 func TestGetAllExpenses(t *testing.T) {
 	seedExpenses(t)
-	var exps []Expenses
+	var exps []m.Expenses
 
 	res := request(http.MethodGet, uri("expenses"), nil)
 	err := res.Decode(&exps)
@@ -89,8 +84,8 @@ func TestGetAllExpenses(t *testing.T) {
 	assert.Greater(t, len(exps), 0)
 }
 
-func seedExpenses(t *testing.T) Expenses {
-	var e Expenses
+func seedExpenses(t *testing.T) m.Expenses {
+	var e m.Expenses
 	body := bytes.NewBufferString(`{
 		"title": "PS5",
 		"amount": 13999,
@@ -131,6 +126,5 @@ func (r *Response) Decode(v interface{}) error {
 	if r.err != nil {
 		return r.err
 	}
-
 	return json.NewDecoder(r.Body).Decode(v)
 }
